@@ -2,7 +2,7 @@
   "Actions": [
     {
       "Icon": "Images/icon",
-      "Name": "Stopwatch",
+      "Name": "MigaStopwatch",
       "States": [
         {
           "Image": "Images/bg",
@@ -12,18 +12,18 @@
       ],
       "SupportedInMultiActions": false,
       "Tooltip": "Stopwatch implementation with various display and behaviour settings.",
-      "UUID": "com.barraider.stopwatch",
+      "UUID": "com.miga.stepwatch",
       "PropertyInspectorPath": "PropertyInspector/Stopwatch/Index.html"
     }
   ],
-  "Author": "BarRaider",
+  "Author": "Miga",
   "Description": "Stopwatch implementation with various display and behaviour settings.\nNew: Time is written to a file of your choice so you can display the elapsed time on your stream.",
-  "Name": "Stopwatch",
+  "Name": "MigaStepwatch",
   "Icon": "Images/pluginIcon",
   "URL": "https://BarRaider.com/",
   "Version": "1.6",
-  "CodePath": "com.barraider.stopwatch",
-  "Category": "BarRaider",
+  "CodePath": "com.miga.stepwatch",
+  "Category": "Migas",
   "CategoryIcon": "Images/categoryIcon",
   "OS": [
     {

@@ -11,7 +11,7 @@ using System.Timers;
 
 namespace Stopwatch
 {
-    [PluginActionId("com.barraider.stopwatch")]
+    [PluginActionId("com.miga.stepwatch")]
     public class StopwatchTimerAction : PluginBase
     {
 

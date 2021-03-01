@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,7 +32,8 @@ namespace Stopwatch
                     Multiline = false,
                     ClearFileOnReset = false,
                     LapMode = false,
-                    FileName = String.Empty
+                    FileName = String.Empty,
+                    SpineFileName = @"C:\Temp\MigaSpineTimer.txt"
                 };
 
                 return instance;
@@ -42,6 +44,9 @@ namespace Stopwatch
 
             [JsonProperty(PropertyName = "multiline")]
             public bool Multiline { get; set; }
+
+            [JsonProperty(PropertyName = "spineFileName")]
+            public string SpineFileName { get; set; }
 
             [JsonProperty(PropertyName = "fileName")]
             public string FileName { get; set; }
@@ -111,16 +116,8 @@ namespace Stopwatch
 
             Logger.Instance.LogMessage(TracingLevel.INFO, "Key Pressed");
 
-            if (StopwatchManager.Instance.IsStopwatchEnabled(stopwatchId)) // Stopwatch is already running
+            /*if (StopwatchManager.Instance.IsStopwatchEnabled(stopwatchId)) // Stopwatch is already running
             {
-                if (settings.LapMode)
-                {
-                    StopwatchManager.Instance.RecordLap(stopwatchId);
-                }
-                else
-                {
-                    PauseStopwatch();
-                }
             }
             else // Stopwatch is already paused
             {
@@ -130,7 +127,18 @@ namespace Stopwatch
                 }
 
                 ResumeStopwatch();
-            }
+            }*/
+
+            
+            StopwatchManager.Instance.LoadStopwatchAndRun(new StopwatchSettings()
+            {
+                StopwatchId = stopwatchId, 
+                FileName = settings.FileName, 
+                ClearFileOnReset = settings.ClearFileOnReset, 
+                LapMode = settings.LapMode, 
+                ResetOnStart = !settings.ResumeOnClick,
+                SpineFileName = settings.SpineFileName
+            });
         }
 
         public override void KeyReleased(KeyPayload payload)
@@ -153,12 +161,15 @@ namespace Stopwatch
 
         private void ResetCounter()
         {
-            StopwatchManager.Instance.ResetStopwatch(new StopwatchSettings() { StopwatchId = stopwatchId, FileName = settings.FileName, ClearFileOnReset = settings.ClearFileOnReset, LapMode = settings.LapMode, ResetOnStart = !settings.ResumeOnClick });
-        }
-
-        private void ResumeStopwatch()
-        {
-            StopwatchManager.Instance.StartStopwatch(new StopwatchSettings() { StopwatchId = stopwatchId, FileName = settings.FileName, ClearFileOnReset = settings.ClearFileOnReset, LapMode = settings.LapMode, ResetOnStart = !settings.ResumeOnClick });
+            StopwatchManager.Instance.ResetStopwatchAndRecreateFile(new StopwatchSettings()
+            {
+                StopwatchId = stopwatchId, 
+                FileName = settings.FileName, 
+                ClearFileOnReset = settings.ClearFileOnReset, 
+                LapMode = settings.LapMode, 
+                ResetOnStart = !settings.ResumeOnClick,
+                SpineFileName = settings.SpineFileName
+            });
         }
 
         private void CheckIfResetNeeded()
@@ -219,7 +230,7 @@ namespace Stopwatch
             hours = minutes / 60;
             minutes %= 60;
 
-            return $"{hours.ToString("00")}{delimiter}{minutes.ToString("00")}{(secondsOnNewLine ? "\n" : delimiter)}{seconds.ToString("00")}";
+            return $"Hrs: {hours:00}\r\n{minutes:00}:{seconds:00}";
         }
 
         private async void TmrOnTick_Elapsed(object sender, ElapsedEventArgs e)

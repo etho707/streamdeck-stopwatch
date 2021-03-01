@@ -8,6 +8,8 @@ namespace Stopwatch
 {
     internal class StopwatchSettings
     {
+        internal string SpineFileName { get; set; }
+
         internal string StopwatchId { get; set; }
 
         internal bool ResetOnStart { get; set; }

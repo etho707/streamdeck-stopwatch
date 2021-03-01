@@ -1,6 +1,7 @@
 ﻿using BarRaider.SdTools;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -55,6 +56,34 @@ namespace Stopwatch
         #endregion
 
         #region Public Methods
+
+        public void LoadStopwatchAndRun(StopwatchSettings settings)
+        {
+            InitializeStopwatch(settings);
+            if (settings.ResetOnStart)
+            {
+                ResetStopwatch(settings);
+            }
+
+            if (File.Exists(settings.SpineFileName))
+            {
+                var dt = DateTime.ParseExact(File.ReadAllText(settings.SpineFileName), "dd-MM-yyyy-HH-mm-ss", CultureInfo.InvariantCulture);
+                dicCounters[settings.StopwatchId].Counter = Convert.ToInt64((DateTime.Now - dt).TotalSeconds);
+            }
+            dicCounters[settings.StopwatchId].IsEnabled = true;
+        }
+
+        public void ResetStopwatchAndRecreateFile(StopwatchSettings settings)
+        {
+            File.Delete(settings.SpineFileName);
+            InitializeStopwatch(settings);
+            if (settings.ResetOnStart)
+            {
+                ResetStopwatch(settings);
+            }
+            dicCounters[settings.StopwatchId].IsEnabled = true;
+            File.WriteAllText(settings.SpineFileName, $"{DateTime.Now:dd-MM-yyyy-HH-mm-ss}");
+        }
 
         public void StartStopwatch(StopwatchSettings settings)
         {
